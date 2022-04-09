@@ -8,5 +8,67 @@
 </head>
 <body>
     Nothing yet...
+    <span id="count-display">0</span>
+    <div class="play button" onclick="play()">
+        play >
+    </div>
+    <div class="stop button" onclick="stop()">
+        [] stop
+    </div>
 </body>
 </html>
+
+<script>
+    let stepNumber = 0;
+    let tempo = 120;
+    let playing = false;
+    let stepCounter = null;
+    let kick = new Audio('kick.m4a');
+    let snare = new Audio('snare.m4a');
+    let hh = new Audio('hhc.m4a');
+
+    function play() {
+        if(playing){
+            clearInterval(stepCounter);
+            stepNumber = -1;
+        }
+        playing = true;
+        stepCounter = setInterval(() => {
+            if (playing) {
+                kick.play();
+                count();
+            }
+        }, convertTempoToTime(tempo));
+        updateStepNumber();
+    }
+
+    function stop() {
+        if(!playing) {
+            stepNumber = -1;
+            updateStepNumber();
+        }
+        playing = false;
+        clearInterval(stepCounter);
+    }
+
+    function count() {
+        console.log(stepNumber);
+        stepNumber = (stepNumber + 1) % 16;
+        updateStepNumber();
+    }
+
+    function updateStepNumber() {
+        document.querySelector('#count-display').innerHTML = stepNumber < 0 ? 0 : stepNumber;
+    }
+    
+    function convertTempoToTime(tempo) {
+        return 60 / tempo / 1 * 1000;
+    }
+
+    function updateTempo(stepCounter) {
+
+    }
+
+    // stepCounter.
+    
+</script>
