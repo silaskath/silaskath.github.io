@@ -7,7 +7,7 @@
     <title>Place Holder</title>
 </head>
 <body>
-    Nothing yet...
+    <input id="tempo" value="120" onchange="updateTempo(document.querySelector('#tempo').value)">
     <span id="count-display">0</span>
     <div class="play button" onclick="play()">
         play >
@@ -26,6 +26,7 @@
     const kick = new Audio('kick.m4a');
     const snare = new Audio('snare.m4a');
     const hh = new Audio('hhc.m4a');
+    const sequence = {};
 
     const play = () => {
         if(playing){
@@ -64,8 +65,15 @@
         return 60 / tempo / 1 * 1000;
     }
 
-    const updateTempo = () => {
-
+    const updateTempo = (newTempo) => {
+        console.log(newTempo);
+        tempo = newTempo;
+        clearInterval(stepCounter);
+        stepCounter = setInterval(() => {
+            if(playing) {
+                count();
+            }
+        }, convertTempoToTime(newTempo));
     }
 
     // stepCounter.
