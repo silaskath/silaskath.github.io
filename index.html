@@ -15,10 +15,13 @@
     <div class="stop button" onclick="stop()">
         [] stop
     </div>
+    <div id="grid">
+    </div>
 </body>
 </html>
 
 <script>
+    'use strict';
     let stepNumber = 0;
     let tempo = 120;
     let playing = false;
@@ -26,21 +29,36 @@
     const kick = new Audio('kick.m4a');
     const snare = new Audio('snare.m4a');
     const hh = new Audio('hhc.m4a');
-    const sequence = {};
+    const sequence = [
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    ];
+    let grid = document.createElement('div');
+    
+    const createGrid = () => {
+        for(let row in sequence) {
+            for(let step in row) {
+                const newChild = document.createElement()
+                grid.appendChild()
+            }
+        }
+    }
 
     const play = () => {
-        if(playing){
+        if (!playing) {
+            stepCounter = setInterval(() => {
+                count();
+            }, convertTempoToTime(tempo));
+            playing = true;
+        }
+        else {
             clearInterval(stepCounter);
             stepNumber = -1;
-        }
-        playing = true;
-        stepCounter = setInterval(() => {
-            if (playing) {
-                kick.play();
+            stepCounter = setInterval(() => {
                 count();
-            }
-        }, convertTempoToTime(tempo));
-        updateStepNumber();
+            }, convertTempoToTime(tempo));
+        }
     }
 
     const stop = () => {
@@ -55,6 +73,7 @@
     const count = () => {
         stepNumber = (stepNumber + 1) % 16;
         updateStepNumber();
+        playing ? playAudio(kick) : null;
     }
 
     const updateStepNumber = () => {
@@ -62,20 +81,21 @@
     }
     
     const convertTempoToTime = (tempo) => {
-        return 60 / tempo / 1 * 1000;
+        return 60 / tempo / 4 * 1000;
     }
 
     const updateTempo = (newTempo) => {
-        console.log(newTempo);
         tempo = newTempo;
-        clearInterval(stepCounter);
-        stepCounter = setInterval(() => {
-            if(playing) {
+        if(playing) {
+            clearInterval(stepCounter);
+            stepCounter = setInterval(() => {
                 count();
-            }
-        }, convertTempoToTime(newTempo));
-    }
-
-    // stepCounter.
+            }, convertTempoToTime(newTempo));
+        }
+    }   
     
+    const playAudio = (audio) => {
+        audio.load();
+        audio.play();
+    }
 </script>
