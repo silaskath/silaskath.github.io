@@ -5,8 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Place Holder</title>
+    <style>
+        .darkmode {
+            background-color: rgb(42, 42, 42);
+            color: white;
+        }
+    </style>
 </head>
-<body>
+<body class="darkmode">
     <input id="tempo" value="120" onchange="updateTempo(document.querySelector('#tempo').value)">
     <span id="count-display">0</span>
     <div class="play button" onclick="play()">
@@ -38,11 +44,22 @@
     
     const createGrid = () => {
         for(let row in sequence) {
+            const newRow = createCustomElement('div', 'row', 'sequence-row-' + row, '');
+            grid.appendChild(newRow);
             for(let step in row) {
-                const newChild = document.createElement()
-                grid.appendChild()
+                const newChild = createCustomElement('div', 'step', 'sequence-step-`${row}`-`${step}`', '');
+                const newControl = createCustomElement('input', 'step-input', 'sequence-step-input-`${row}`-`${step}`', '');
+                grid.appendChild(newChild)
             }
         }
+    }
+
+    const createCustomElement = (type, htmlClass, id, innerHTML) => {
+        const customElement = document.createElement(type);
+        customElement.setAttribute('class', htmlClass);
+        customElement.setAttribute('id', id);
+        customElement.innerHTML = innerHTML;
+        return customElement;
     }
 
     const play = () => {
