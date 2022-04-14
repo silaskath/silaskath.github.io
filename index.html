@@ -10,6 +10,25 @@
             background-color: rgb(42, 42, 42);
             color: white;
         }
+        .sequence-step-input {
+            width: 3em;
+            text-align: center;
+        }
+        .sequence-step {
+            display: inline-flex;
+            padding-right: 3px;
+            padding-bottom: 3px;
+        }
+        .row {
+            display: flex;
+        }
+        input.sequence-step-input:disabled {
+            background-color: white;
+            color: black;
+        }
+        input.hide-number.sequence-step-input:disabled {
+            color: rgba(0,0,0,0);
+        }
     </style>
 </head>
 <body class="darkmode">
@@ -35,24 +54,32 @@
     const kick = new Audio('kick.m4a');
     const snare = new Audio('snare.m4a');
     const hh = new Audio('hhc.m4a');
-    const sequence = [
+    const sequence =[
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     ];
-    let grid = document.createElement('div');
-    
+
     const createGrid = () => {
-        for(let row in sequence) {
-            const newRow = createCustomElement('div', 'row', 'sequence-row-' + row, '');
-            grid.appendChild(newRow);
-            for(let step in row) {
-                const newChild = createCustomElement('div', 'step', 'sequence-step-`${row}`-`${step}`', '');
-                const newControl = createCustomElement('input', 'step-input', 'sequence-step-input-`${row}`-`${step}`', '');
-                grid.appendChild(newChild)
+        for(let row = 0; row < sequence.length; row++) {
+            const newRow = createCustomElement('div', 'row', `sequence-row-${row}`, '');
+            for(let step = 0; step < sequence[row].length; step++) {
+                console.log(row, step);
+                const newChild = createCustomElement('div', 'sequence-step', `sequence-step-${row}-${step}`, '');
+                const newControl = createCustomElement('input', 'sequence-step-input', `sequence-step-input-${row}-${step}`, '');
+                newControl.setAttribute('value', sequence[row][step]);
+                if(newControl.value == 0) {
+                    newControl.classList.add('hide-number');
+                }
+                newControl.setAttribute('disabled', 'disabled');
+                newChild.setAttribute('onclick', `increment("sequence-step-input-${row}-${step}")`);
+                newChild.appendChild(newControl);
+                newRow.appendChild(newChild);
             }
+            document.querySelector('#grid').appendChild(newRow);
         }
     }
+
 
     const createCustomElement = (type, htmlClass, id, innerHTML) => {
         const customElement = document.createElement(type);
@@ -60,6 +87,22 @@
         customElement.setAttribute('id', id);
         customElement.innerHTML = innerHTML;
         return customElement;
+    }
+
+    createGrid();
+
+    const increment = (controlId) => {
+        console.log(controlId);
+        const control = document.querySelector('#' + controlId);
+        const currentValue = parseFloat(control.value);
+        let newValue = ((currentValue == 0) ? 125 : currentValue) - 25;
+        control.value = newValue;
+        if(newValue == 0) {
+            control.classList.add('hide-number');
+        }
+        else {
+            control.classList.remove('hide-number');
+        }
     }
 
     const play = () => {
@@ -96,7 +139,7 @@
     const updateStepNumber = () => {
         document.querySelector('#count-display').innerHTML = stepNumber < 0 ? 0 : stepNumber;
     }
-    
+
     const convertTempoToTime = (tempo) => {
         return 60 / tempo / 4 * 1000;
     }
@@ -109,8 +152,8 @@
                 count();
             }, convertTempoToTime(newTempo));
         }
-    }   
-    
+    }
+
     const playAudio = (audio) => {
         audio.load();
         audio.play();
