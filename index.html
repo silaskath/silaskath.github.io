@@ -8,12 +8,12 @@
 </head>
 <body>
     Nothing yet...
-    <span id="count-display">0</span>
+    <!-- <span id="count-display">0</span> -->
     <div class="play button" onclick="play()">
-        play >
+        <!-- play > -->
     </div>
     <div class="stop button" onclick="stop()">
-        [] stop
+        <!-- [] stop -->
     </div>
 </body>
 </html>
@@ -59,7 +59,7 @@
     const updateStepNumber = () => {
         document.querySelector('#count-display').innerHTML = stepNumber < 0 ? 0 : stepNumber;
     }
-    
+
     const convertTempoToTime = (tempo) => {
         return 60 / tempo / 1 * 1000;
     }
@@ -69,5 +69,5 @@
     }
 
     // stepCounter.
-    
+
 </script>
